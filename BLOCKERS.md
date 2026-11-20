@@ -16,7 +16,7 @@
 - Manual step: none.
 
 ## B4. Hosts blocked
-- huggingface.co, api.osv.dev and semgrep.dev did not answer. pip-audit (PyPI data), ruff S, gitleaks and actionlint ran instead. The project has no runtime dependencies.
+- huggingface.co, api.osv.dev and semgrep.dev did not answer during the first probe. Later, `uvx pip-audit .` reached its data source and found no known vulnerabilities. ruff S, gitleaks and actionlint also ran. The project has no runtime dependencies.
 
 ## Bugs found and fixed
 - Live bug, score 4 x 4 = 16: `call("delete_file", name=...)` raised TypeError. Fixed with a positional-only parameter. Test: `test_call_accepts_a_tool_argument_named_name`.

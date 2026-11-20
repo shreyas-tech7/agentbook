@@ -51,3 +51,24 @@ def test_external_links_are_listed_not_fetched(tmp_path):
     (tmp_path / "page.md").write_text("[web](https://x.org)")
     _, external = check(tmp_path)
     assert external == ["page.md: https://x.org"]
+
+
+def test_linked_files_are_not_ignored_by_git():
+    """A file that only exists in one working copy breaks every fresh clone."""
+    import re
+    import subprocess
+
+    from check_links import MD_LINK, files, strip_code
+    listed = subprocess.run(["git", "ls-files", "--others", "--ignored", "--exclude-standard"],
+                            cwd=ROOT, capture_output=True, text=True, check=True).stdout
+    ignored = {(ROOT / line).resolve() for line in listed.splitlines()}
+    bad = []
+    for path in files(ROOT):
+        if path.suffix != ".md" or path.resolve() in ignored:
+            continue
+        for target in MD_LINK.findall(strip_code(path.read_text())):
+            file_part = target.partition("#")[0]
+            if file_part and not re.match(r"[a-z]+:", target):
+                if (path.parent / file_part).resolve() in ignored:
+                    bad.append(f"{path.relative_to(ROOT)} -> {target}")
+    assert bad == []
