@@ -50,3 +50,12 @@ def test_a_cut_message_fits_in_half_the_cap():
     memory.add(user("x" * 5000))
     assert estimate_tokens(memory.turns[0]["content"]) <= 50
     assert memory.turns[0]["content"].endswith("[cut]")
+
+
+def test_pinned_messages_cannot_crowd_out_the_chat():
+    import pytest
+
+    from agentbook.tools import system
+    memory = p.Memory(max_tokens=40)
+    with pytest.raises(ValueError):
+        memory.pin(system("x" * 200))

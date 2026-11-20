@@ -42,7 +42,10 @@ def test_build_section_links_the_prompt_and_lists_human_checks():
     section = README.split("## How this was built", 1)[1]
     assert "docs/build/BUILD_PROMPT.md" in section
     assert "AI agents wrote most of this code under Shreyas's direction" in section
-    assert section.count("not") >= 3
+    for check in ["Shreyas has not read the diff yet.",
+                  "Shreyas has not run the record-mode demo yet.",
+                  "Shreyas has not checked the lessons as a first-time reader yet."]:
+        assert f"- {check}" in section, check
 
 
 def test_pattern_map_covers_all_twelve_patterns():

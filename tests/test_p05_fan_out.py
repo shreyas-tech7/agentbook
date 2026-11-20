@@ -59,3 +59,16 @@ def test_all_workers_failing_skips_the_merge():
     counter = CallCounter(FakeModel(respond=broken))
     assert p.fan_out(counter, p.TEXT, p.ANGLES).stop == "all_failed"
     assert counter.calls == 0
+
+
+def test_hung_workers_share_one_deadline():
+    """Broken case: three hung workers. One timeout each would take three times as long."""
+    def hang(messages):
+        if "Merge" not in messages[0]["content"]:
+            time.sleep(0.5)
+        return "merged"
+
+    start = time.monotonic()
+    outcome = p.fan_out(FakeModel(respond=hang), p.TEXT, p.ANGLES, timeout=0.15)
+    assert time.monotonic() - start < 0.4
+    assert outcome.stop == "all_failed"

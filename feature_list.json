@@ -6,7 +6,7 @@
     "steps": [
       ".venv/bin/python -m pytest tests/test_core.py"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F02",
@@ -15,7 +15,7 @@
     "steps": [
       ".venv/bin/python -m pytest tests/test_network_guard.py"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F03",
@@ -24,7 +24,7 @@
     "steps": [
       ".venv/bin/python -m pytest tests/test_repo_rules.py"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F04",
@@ -34,7 +34,7 @@
       ".venv/bin/python -m pytest tests/test_p01_tool_loop.py",
       ".venv/bin/python -m pytest tests/test_repo_rules.py tests/test_solutions.py -k tool_loop"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F05",
@@ -44,7 +44,7 @@
       ".venv/bin/python -m pytest tests/test_p02_plan_execute.py",
       ".venv/bin/python -m pytest tests/test_repo_rules.py tests/test_solutions.py -k plan_execute"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F06",
@@ -54,7 +54,7 @@
       ".venv/bin/python -m pytest tests/test_p03_router.py",
       ".venv/bin/python -m pytest tests/test_repo_rules.py tests/test_solutions.py -k router"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F07",
@@ -64,7 +64,7 @@
       ".venv/bin/python -m pytest tests/test_p04_prompt_chain.py",
       ".venv/bin/python -m pytest tests/test_repo_rules.py tests/test_solutions.py -k prompt_chain"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F08",
@@ -74,7 +74,7 @@
       ".venv/bin/python -m pytest tests/test_p05_fan_out.py",
       ".venv/bin/python -m pytest tests/test_repo_rules.py tests/test_solutions.py -k fan_out"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F09",
@@ -84,7 +84,7 @@
       ".venv/bin/python -m pytest tests/test_p06_orchestrator.py",
       ".venv/bin/python -m pytest tests/test_repo_rules.py tests/test_solutions.py -k orchestrator"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F10",
@@ -94,7 +94,7 @@
       ".venv/bin/python -m pytest tests/test_p07_evaluator_optimizer.py",
       ".venv/bin/python -m pytest tests/test_repo_rules.py tests/test_solutions.py -k evaluator_optimizer"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F11",
@@ -104,7 +104,7 @@
       ".venv/bin/python -m pytest tests/test_p08_memory.py",
       ".venv/bin/python -m pytest tests/test_repo_rules.py tests/test_solutions.py -k memory"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F12",
@@ -114,7 +114,7 @@
       ".venv/bin/python -m pytest tests/test_p09_human_approval.py",
       ".venv/bin/python -m pytest tests/test_repo_rules.py tests/test_solutions.py -k human_approval"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F13",
@@ -124,7 +124,7 @@
       ".venv/bin/python -m pytest tests/test_p10_handoff.py",
       ".venv/bin/python -m pytest tests/test_repo_rules.py tests/test_solutions.py -k handoff"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F14",
@@ -134,7 +134,7 @@
       ".venv/bin/python -m pytest tests/test_p11_budgets.py",
       ".venv/bin/python -m pytest tests/test_repo_rules.py tests/test_solutions.py -k budgets"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F15",
@@ -144,7 +144,7 @@
       ".venv/bin/python -m pytest tests/test_p12_retrieval.py",
       ".venv/bin/python -m pytest tests/test_repo_rules.py tests/test_solutions.py -k retrieval"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F16",
@@ -155,7 +155,7 @@
       ".venv/bin/python scripts/gen_readme.py --check",
       ".venv/bin/python -m pytest tests/test_readme.py"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F17",
@@ -174,7 +174,7 @@
     "steps": [
       "time ./init.sh"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F19",
@@ -183,7 +183,7 @@
     "steps": [
       ".venv/bin/python -m pytest tests/test_readme.py"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F20",
@@ -193,7 +193,7 @@
       ".venv/bin/python -m pytest tests/test_repo_quality.py",
       "actionlint .github/workflows/*.yml"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F21",
@@ -203,7 +203,7 @@
       ".venv/bin/python scripts/check_links.py",
       ".venv/bin/python -m pytest tests/test_check_links.py"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F22",
@@ -212,7 +212,7 @@
     "steps": [
       ".venv/bin/python -m pytest tests/test_repo_quality.py -k study"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F23",
@@ -223,7 +223,7 @@
       "gitleaks git -v .",
       "git status --porcelain"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F24",
@@ -233,6 +233,6 @@
       ".venv/bin/python -m pytest tests/test_repo_quality.py -k handoff",
       "git ls-remote origin claude/build-agentbook"
     ],
-    "passes": false
+    "passes": true
   }
 ]

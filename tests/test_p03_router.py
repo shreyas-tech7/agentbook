@@ -28,3 +28,10 @@ def test_failure_case_unknown_label_falls_back_to_default():
 def test_router_refuses_to_start_without_its_default():
     with pytest.raises(ValueError):
         p.route(FakeModel(["x"]), "hi", {"billing": str}, default="general")
+
+
+def test_label_matches_handler_names_in_any_case():
+    from agentbook.model import FakeModel
+    handlers = {"Billing": lambda r: "billing", "general": lambda r: "general"}
+    outcome = p.route(FakeModel(["billing"]), "I was charged twice", handlers)
+    assert (outcome.stop, outcome.answer) == ("done", "billing")

@@ -25,8 +25,9 @@ def route(model: Model, request: str, handlers: dict[str, Handler],
     labels = ", ".join(handlers)
     prompt = f"Pick the best label for the request. Reply with one word from: {labels}."
     label = model.complete([system(prompt), user(request)]).text.strip().lower().rstrip(".")
-    if label in handlers:
-        chosen, stop = label, "done"
+    names = {name.lower(): name for name in handlers}
+    if label in names:
+        chosen, stop = names[label], "done"
     else:
         chosen, stop = default, "fallback"
     return Outcome(handlers[chosen](request), stop, steps=1,

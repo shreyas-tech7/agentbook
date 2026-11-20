@@ -56,11 +56,14 @@ def test_external_links_are_listed_not_fetched(tmp_path):
 def test_linked_files_are_not_ignored_by_git():
     """A file that only exists in one working copy breaks every fresh clone."""
     import re
+    import shutil
     import subprocess
 
     from check_links import MD_LINK, files, strip_code
-    listed = subprocess.run(["git", "ls-files", "--others", "--ignored", "--exclude-standard"],
-                            cwd=ROOT, capture_output=True, text=True, check=True).stdout
+    git = shutil.which("git") or "git"
+    command = [git, "ls-files", "--others", "--ignored", "--exclude-standard"]
+    listed = subprocess.run(command, cwd=ROOT, capture_output=True,  # noqa: S603 (fixed command)
+                            text=True, check=True).stdout
     ignored = {(ROOT / line).resolve() for line in listed.splitlines()}
     bad = []
     for path in files(ROOT):

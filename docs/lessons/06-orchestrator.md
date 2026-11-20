@@ -38,14 +38,14 @@ Read it line by line:
 
 `parse_json` is in the tools helper. It also strips a code fence, because models often wrap JSON in one.
 
-<!-- quote: agentbook/tools.py#L68-L77 -->
+<!-- quote: agentbook/tools.py#L69-L78 -->
 ```python
 def parse_json(text: str, default: Any = None) -> Any:
     """Read JSON from a model reply. Strip a code fence if there is one."""
     cleaned = text.strip()
-    if cleaned.startswith("```"):
-        cleaned = cleaned.strip("`")
-        cleaned = cleaned.split("\n", 1)[1] if "\n" in cleaned else ""
+    fence = re.match(r"^```[a-zA-Z]*\s*(.*?)\s*```$", cleaned, re.S)
+    if fence:
+        cleaned = fence.group(1)
     try:
         return json.loads(cleaned)
     except json.JSONDecodeError:

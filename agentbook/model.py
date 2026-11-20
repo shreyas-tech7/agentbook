@@ -11,6 +11,7 @@ import os
 import threading
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from collections.abc import Callable
 from dataclasses import dataclass, field
@@ -97,9 +98,25 @@ def parse_reply(data: dict) -> Reply:
     if calls:
         fn = calls[0]["function"]
         args = fn.get("arguments") or "{}"
-        parsed = json.loads(args) if isinstance(args, str) else args
+        try:
+            parsed = json.loads(args) if isinstance(args, str) else args
+        except json.JSONDecodeError:
+            parsed = {"_bad_arguments": args}  # run_tool reports this as text
         return Reply(tool_call=ToolCall(fn["name"], parsed))
     return Reply(text=msg.get("content") or "")
+
+
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    """Refuse redirects, so the key never follows a redirect to another host."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
+def key_is_safe(url: str) -> bool:
+    """Send a key only over https, or over http to this machine."""
+    parts = urllib.parse.urlsplit(url)
+    return parts.scheme == "https" or parts.hostname in {"localhost", "127.0.0.1", "::1"}
 
 
 class OpenAICompatModel:
@@ -114,6 +131,7 @@ class OpenAICompatModel:
             raise ValueError("base_url must start with https:// or http://")
         self.base_url, self.model, self.key_env = base_url.rstrip("/"), model, key_env
         self.timeout, self.tries, self.sleep = timeout, tries, sleep
+        self.opener = urllib.request.build_opener(_NoRedirect)
 
     def complete(self, messages: list[Message], tools: list[dict] | None = None) -> Reply:
         body: dict[str, Any] = {"model": self.model, "messages": [to_wire(m) for m in messages]}
@@ -121,7 +139,7 @@ class OpenAICompatModel:
             body["tools"] = [{"type": "function", "function": t} for t in tools]
         headers = {"Content-Type": "application/json"}
         key = os.environ.get(self.key_env)
-        if key:
+        if key and key_is_safe(self.base_url):
             headers["Authorization"] = f"Bearer {key}"
         url = f"{self.base_url}/chat/completions"  # the scheme is checked in __init__
         req = urllib.request.Request(url, data=json.dumps(body).encode(),  # noqa: S310
@@ -129,7 +147,7 @@ class OpenAICompatModel:
         wait = 2.0
         for attempt in range(self.tries):
             try:
-                with urllib.request.urlopen(req, timeout=self.timeout) as resp:  # noqa: S310
+                with self.opener.open(req, timeout=self.timeout) as resp:
                     return parse_reply(json.load(resp))
             except urllib.error.HTTPError as err:
                 if err.code != 429 or attempt == self.tries - 1:

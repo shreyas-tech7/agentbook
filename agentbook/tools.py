@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
@@ -68,9 +69,9 @@ def run_tool(tools: dict[str, Tool], call: ToolCall) -> str:
 def parse_json(text: str, default: Any = None) -> Any:
     """Read JSON from a model reply. Strip a code fence if there is one."""
     cleaned = text.strip()
-    if cleaned.startswith("```"):
-        cleaned = cleaned.strip("`")
-        cleaned = cleaned.split("\n", 1)[1] if "\n" in cleaned else ""
+    fence = re.match(r"^```[a-zA-Z]*\s*(.*?)\s*```$", cleaned, re.S)
+    if fence:
+        cleaned = fence.group(1)
     try:
         return json.loads(cleaned)
     except json.JSONDecodeError:

@@ -27,6 +27,8 @@ class Memory:
         self.cut = 0
 
     def pin(self, message: Message) -> None:
+        if self.size(self.pinned + [message]) > self.max_tokens // 2:
+            raise ValueError("pinned messages may use at most half the cap")
         self.pinned.append(message)
 
     def add(self, message: Message) -> None:

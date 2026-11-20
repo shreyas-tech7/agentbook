@@ -39,7 +39,7 @@ Read it line by line:
 
 `run_tool` lives in the tools helper. It never crashes the loop. An unknown tool or an error comes back as text. The model can read that text and try something else.
 
-<!-- quote: agentbook/tools.py#L57-L65 -->
+<!-- quote: agentbook/tools.py#L58-L66 -->
 ```python
 def run_tool(tools: dict[str, Tool], call: ToolCall) -> str:
     """Run one tool call. Errors come back as text, so the model can read them and recover."""

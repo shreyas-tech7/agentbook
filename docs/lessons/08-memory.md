@@ -12,7 +12,7 @@ Memory has two parts. Pinned messages stay forever. Turns are the normal back an
 
 ## The code
 
-<!-- quote: agentbook/patterns/memory.py#L21-L54 -->
+<!-- quote: agentbook/patterns/memory.py#L21-L56 -->
 ```python
 class Memory:
     def __init__(self, max_tokens: int = 200):
@@ -23,6 +23,8 @@ class Memory:
         self.cut = 0
 
     def pin(self, message: Message) -> None:
+        if self.size(self.pinned + [message]) > self.max_tokens // 2:
+            raise ValueError("pinned messages may use at most half the cap")
         self.pinned.append(message)
 
     def add(self, message: Message) -> None:
@@ -53,7 +55,7 @@ class Memory:
 Read it line by line:
 
 1. `max_tokens` is the cap for the whole window. We use the estimate from the counter.
-2. `pin` adds a message that never drops.
+2. `pin` adds a message that never drops. Pinned messages may use at most half the cap, so the chat always has room.
 3. `add` adds a turn. A turn bigger than half the cap is cut and marked `[cut]`.
 4. `window` starts with the room left after the pinned messages.
 5. It walks the turns from newest to oldest and keeps each one that fits.
@@ -62,7 +64,7 @@ Read it line by line:
 
 One chat turn adds the user text, calls the model with the window and saves the reply.
 
-<!-- quote: agentbook/patterns/memory.py#L57-L61 -->
+<!-- quote: agentbook/patterns/memory.py#L59-L63 -->
 ```python
 def chat_turn(model: Model, memory: Memory, text: str) -> str:
     memory.add(user(text))
@@ -83,9 +85,8 @@ python -m agentbook memory
 
 In the failure case, the user pastes a log of 6,000 characters. That is about 1,500 tokens.
 
-<!-- quote: agentbook/patterns/memory.py#L84-L91 -->
+<!-- quote: agentbook/patterns/memory.py#L87-L94 -->
 ```python
-
 def failure_example() -> tuple[Outcome, CallCounter]:
     """The user pastes a 6,000-character log. It is cut, and the pinned facts survive."""
     memory = Memory(max_tokens=200)
@@ -93,6 +94,7 @@ def failure_example() -> tuple[Outcome, CallCounter]:
     fake = FakeModel(["Hi!", "That log is long. I read the start.", "Still vegetarian: yes."])
     counter = CallCounter(fake)
     texts = ["Hello", "error line\n" * 545, "Am I still vegetarian?"]
+    return run_chat(counter, memory, texts), counter
 ```
 
 A naive memory has no pins and no cut. The test `test_failure_case_naive_memory_loses_the_system_prompt` shows what happens. The paste does not fit, so the window keeps nothing older than it. The window is empty. The model would forget that the user is vegetarian.

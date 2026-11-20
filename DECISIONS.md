@@ -21,3 +21,7 @@ One line for each choice: what I picked, what else I weighed, and why.
 17. Fan-out shuts its thread pool down without waiting. A hung worker would otherwise block the merge even after its timeout.
 18. README tables come from `results/call_counts.json` through `scripts/gen_readme.py`. A test fails if the README and the file disagree.
 19. Call counts are fixed counts from scripted runs. They have no sampling error, so the README gives no interval for them and says why.
+20. The record adapter sends the key only over https or to this machine, and it follows no redirects. A reviewer found that urllib copies the key header onto a redirect to any host.
+21. Fan-out workers share one deadline through `concurrent.futures.wait`. Before, each result waited its own timeout, so three hung workers cost three timeouts.
+22. Budgets stay checks between calls. Weighed estimating the next call before it runs. The lesson now says a run can go past a limit by one call, which keeps the loop simple.
+23. `.gitignore` anchors `/build/`. The old `build/` rule hid `docs/build/BUILD_PROMPT.md`, so a fresh clone failed. A test now fails if a linked file is git-ignored.

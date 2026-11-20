@@ -23,6 +23,7 @@ def _guarded_connect(self, address):
 def no_network(monkeypatch):
     monkeypatch.setattr(socket.socket, "connect", _guarded_connect)
     monkeypatch.setattr(socket, "create_connection", _blocked_create_connection)
+    monkeypatch.setattr(socket, "getaddrinfo", _guarded_getaddrinfo)
     yield
 
 
@@ -34,3 +35,12 @@ def _blocked_create_connection(address, *args, **kwargs):
 
 
 _real_create_connection = socket.create_connection
+
+
+def _guarded_getaddrinfo(host, *args, **kwargs):
+    if host is None or host in LOCAL:
+        return _real_getaddrinfo(host, *args, **kwargs)
+    raise NetworkBlocked(f"tests must run offline, blocked DNS lookup of {host!r}")
+
+
+_real_getaddrinfo = socket.getaddrinfo

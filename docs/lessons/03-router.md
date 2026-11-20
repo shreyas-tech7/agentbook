@@ -12,7 +12,7 @@ One cheap call reads the request and picks a label from a fixed list. Our code l
 
 ## The code
 
-<!-- quote: agentbook/patterns/router.py#L21-L33 -->
+<!-- quote: agentbook/patterns/router.py#L21-L34 -->
 ```python
 def route(model: Model, request: str, handlers: dict[str, Handler],
           default: str = "general") -> Outcome:
@@ -21,8 +21,9 @@ def route(model: Model, request: str, handlers: dict[str, Handler],
     labels = ", ".join(handlers)
     prompt = f"Pick the best label for the request. Reply with one word from: {labels}."
     label = model.complete([system(prompt), user(request)]).text.strip().lower().rstrip(".")
-    if label in handlers:
-        chosen, stop = label, "done"
+    names = {name.lower(): name for name in handlers}
+    if label in names:
+        chosen, stop = names[label], "done"
     else:
         chosen, stop = default, "fallback"
     return Outcome(handlers[chosen](request), stop, steps=1,
@@ -34,13 +35,13 @@ Read it line by line:
 1. The default handler must exist. Otherwise the router refuses to start.
 2. The prompt lists every label and asks for one word.
 3. Our code cleans the reply. It strips spaces, lowers the case and drops a final dot.
-4. A known label picks its handler. The stop reason is `done`.
+4. A known label picks its handler, in any case. The stop reason is `done`.
 5. Anything else goes to the default handler. The stop reason is `fallback`.
 6. The outcome records the raw label and the route it took.
 
 Handlers are plain functions. This helper makes a handler that calls the model.
 
-<!-- quote: agentbook/patterns/router.py#L36-L38 -->
+<!-- quote: agentbook/patterns/router.py#L37-L39 -->
 ```python
 def answer_with(model: Model, instructions: str) -> Handler:
     """Make a handler that answers with the model under its own instructions."""
@@ -59,7 +60,7 @@ python -m agentbook router
 
 Models do not always follow the format. In the failure case, the model rambles. It says "Hmm, this could be billing or maybe technical, hard to say!" That is not a label.
 
-<!-- quote: agentbook/patterns/router.py#L57-L62 -->
+<!-- quote: agentbook/patterns/router.py#L58-L63 -->
 ```python
 def failure_example() -> tuple[Outcome, CallCounter]:
     """The model rambles instead of giving a label. The default handler takes over."""

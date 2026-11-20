@@ -92,21 +92,81 @@ def test_to_wire_sends_tool_results_as_user_text():
         "role": "user", "content": "Tool result from add: 3"}
 
 
-def test_record_adapter_retries_on_429_with_doubling_waits(monkeypatch):
-    import io
+class FakeOpener:
+    """Stands in for urllib's opener. It records each request and plays back answers."""
+
+    def __init__(self, answers):
+        self.answers, self.requests = list(answers), []
+
+    def open(self, req, timeout):
+        import io
+        self.requests.append(req)
+        answer = self.answers.pop(0)
+        if isinstance(answer, Exception):
+            raise answer
+        return io.BytesIO(json.dumps(answer).encode())
+
+
+OK = {"choices": [{"message": {"content": "ok"}}]}
+
+
+def http_error(code):
     import urllib.error
-    import urllib.request
+    return urllib.error.HTTPError("https://provider.test", code, "error", {}, None)
 
-    waits, attempts = [], []
 
-    def fake_urlopen(req, timeout):
-        attempts.append(req.full_url)
-        if len(attempts) < 3:
-            raise urllib.error.HTTPError(req.full_url, 429, "slow down", {}, None)
-        return io.BytesIO(json.dumps({"choices": [{"message": {"content": "ok"}}]}).encode())
+def adapter(url, answers, **kw):
+    model = OpenAICompatModel(url, "m", **kw)
+    model.opener = FakeOpener(answers)
+    return model
 
-    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
-    model = OpenAICompatModel("https://provider.test/v1", "m", sleep=waits.append)
+
+def test_record_adapter_retries_on_429_with_doubling_waits():
+    waits = []
+    model = adapter("https://provider.test/v1", [http_error(429), http_error(429), OK],
+                    sleep=waits.append)
     assert model.complete([{"role": "user", "content": "hi"}]).text == "ok"
     assert waits == [2.0, 4.0]
-    assert attempts[0] == "https://provider.test/v1/chat/completions"
+    assert model.opener.requests[0].full_url == "https://provider.test/v1/chat/completions"
+
+
+def test_record_adapter_raises_a_server_error_at_once():
+    model = adapter("https://provider.test/v1", [http_error(500), OK], sleep=lambda s: None)
+    with pytest.raises(Exception, match="500"):
+        model.complete([{"role": "user", "content": "hi"}])
+    assert len(model.opener.requests) == 1
+
+
+@pytest.mark.parametrize("url,sent", [("https://provider.test/v1", True),
+                                      ("http://localhost:8080/v1", True),
+                                      ("http://provider.test/v1", False)])
+def test_key_goes_only_over_https_or_to_this_machine(monkeypatch, url, sent):
+    """Broken case: plain http to another host must not carry the key."""
+    monkeypatch.setenv("AGENTBOOK_API_KEY", "fake-key-for-test")
+    model = adapter(url, [OK])
+    model.complete([{"role": "user", "content": "hi"}])
+    assert model.opener.requests[0].has_header("Authorization") is sent
+
+
+def test_adapter_refuses_redirects():
+    """A redirect could carry the key to another host, so the adapter follows none."""
+    import urllib.request
+    model = OpenAICompatModel("https://provider.test/v1", "m")
+    handler = next(h for h in model.opener.handlers
+                   if isinstance(h, urllib.request.HTTPRedirectHandler))
+    req = urllib.request.Request("https://provider.test/v1/chat/completions")
+    assert handler.redirect_request(req, None, 302, "Found", {}, "https://other.test/") is None
+
+
+def test_bad_tool_arguments_do_not_crash():
+    data = {"choices": [{"message": {"tool_calls": [
+        {"function": {"name": "add", "arguments": "{not json"}}]}}]}
+    reply = parse_reply(data)
+    assert reply.tool_call.name == "add"
+    assert reply.tool_call.args == {"_bad_arguments": "{not json"}
+
+
+def test_parse_json_strips_a_one_line_fence():
+    assert parse_json('```["a"]```') == ["a"]
+    assert parse_json('```json\n{"x": 1}\n```') == {"x": 1}
+    assert parse_json("not json", default="none") == "none"

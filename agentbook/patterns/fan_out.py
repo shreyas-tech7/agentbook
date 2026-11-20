@@ -4,13 +4,13 @@ Independent subtasks run side by side in threads. Then one call merges the resul
 The subtasks are known before the run starts. That is the difference from pattern 6.
 
 Failure: one worker crashes or hangs, and the merge step waits or breaks.
-Guard: each worker has a timeout. A failed worker becomes a "MISSING" line,
+Guard: all workers share one deadline. A failed worker becomes a "MISSING" line,
 so the merge still runs and the stop reason says "partial".
 """
 
 from __future__ import annotations
 
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, wait
 
 from agentbook.counter import CallCounter
 from agentbook.model import FakeModel, Message, Model
@@ -26,14 +26,17 @@ def fan_out(model: Model, text: str, angles: list[str], max_parallel: int = 4,
 
     pool = ThreadPoolExecutor(max_workers=max_parallel)
     futures = [pool.submit(work, angle) for angle in angles]
+    wait(futures, timeout=timeout)  # one shared deadline for all workers
+    pool.shutdown(wait=False, cancel_futures=True)  # do not wait for a hung worker
     parts, missing = [], []
     for angle, future in zip(angles, futures, strict=True):
-        try:
-            parts.append(f"{angle}: {future.result(timeout=timeout)}")
-        except Exception as err:  # a crash or a timeout
+        if not future.done() or future.cancelled() or future.exception():
+            why = "Timeout" if not future.done() or future.cancelled() else \
+                type(future.exception()).__name__
             missing.append(angle)
-            parts.append(f"{angle}: MISSING ({type(err).__name__})")
-    pool.shutdown(wait=False, cancel_futures=True)  # do not wait for a hung worker
+            parts.append(f"{angle}: MISSING ({why})")
+        else:
+            parts.append(f"{angle}: {future.result()}")
     if len(missing) == len(angles):
         return Outcome(None, "all_failed", extra={"missing": missing})
     merged = model.complete([system(MERGE), user("\n".join(parts))]).text

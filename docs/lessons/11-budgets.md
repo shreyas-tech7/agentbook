@@ -4,7 +4,7 @@ Every earlier lesson had one limit, such as `max_steps` or `max_rounds`. Real ag
 
 ## The problem
 
-An agent can fail in quiet ways. It can take a thousand steps. It can make ten calls that each send a huge history. It can wait on a slow tool for an hour. A step limit alone catches only the first. We want every limit checked, and a clear reason when one is hit.
+An agent can fail in quiet ways. It can take a thousand steps. It can make ten calls that each send a huge history. It can keep calling slow tools for an hour. A step limit alone catches only the first. We want every limit checked, and a clear reason when one is hit.
 
 ## The idea
 
@@ -89,7 +89,7 @@ def failure_example() -> tuple[Outcome, CallCounter]:
     return run_with_budget(counter, "When does the shop open?", NOTES, budget), counter
 ```
 
-The step limit is 50, so it would not help soon. The token limit is 1,500. After five calls the counter passes 1,500 tokens. The run stops with `max_tokens`. Note how fast tokens grow. The fifth call alone costs more than the first two together.
+The step limit is 50, so it would not help soon. The token limit is 1,500. After five calls the counter reads 1,655 tokens. The run stops with `max_tokens`. It went past the limit by part of one call. Note how fast tokens grow. The fifth call alone costs more than the first two together.
 
 A second test uses a fake clock. Each call moves the clock 10 seconds ahead. The time limit is 25 seconds, so the run stops after three calls with `max_seconds`. The test takes no real time.
 
@@ -108,7 +108,7 @@ A second test uses a fake clock. Each call moves the clock 10 seconds ahead. The
 
 Typical call count: example 2, failure case 5.
 
-The budget sets the most you can pay. The counter tells you what you did pay.
+Our code checks the budget between calls, not during them. So a run can go past a limit by one call. A slow call or a slow tool is never cut off in the middle. Set each limit a little below what you can afford. The counter tells you what you did pay.
 
 ## Exercises
 

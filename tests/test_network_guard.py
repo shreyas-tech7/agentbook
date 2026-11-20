@@ -34,3 +34,12 @@ def test_local_connections_still_work():
     client = socket.create_connection(server.getsockname(), timeout=1)
     client.close()
     server.close()
+
+
+def test_dns_lookups_are_blocked():
+    import socket
+
+    import pytest
+    from conftest import NetworkBlocked
+    with pytest.raises(NetworkBlocked):
+        socket.getaddrinfo("example.org", 443)
