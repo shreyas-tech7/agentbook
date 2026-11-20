@@ -2,7 +2,7 @@
 
 ## v0.1.0-rc1 (2026-11-20)
 
-Release commit: RELEASE_SHA
+Release commit: c49130173c16171cb8c833ca6ede6b466a38e72a
 
 The first release candidate. The tag is not created yet. Shreyas creates it, see `docs/HUMAN_STEPS.md`.
 

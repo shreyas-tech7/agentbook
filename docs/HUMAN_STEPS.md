@@ -1,12 +1,12 @@
 # Human steps
 
-Only Shreyas can do these. Do them in order. Release commit: `RELEASE_SHA`.
+Only Shreyas can do these. Do them in order. Release commit: `c49130173c16171cb8c833ca6ede6b466a38e72a`.
 
 ## 1. Create the GitHub repo and push the bundle
 
 The build had no GitHub access, so the code lives in a Git bundle.
 
-1. Create a private repo named `agentbook` under `shreyas-tech7` at https://github.com/new. Add no README, license or .gitignore.
+1. The private repo `shreyas-tech7/agentbook` may already exist and hold the branch. Check https://github.com/shreyas-tech7/agentbook. If it has the branch `claude/build-agentbook`, skip to step 2. If the repo does not exist, create it as private at https://github.com/new, with no README, license or .gitignore.
 2. Clone the bundle and push every branch:
 
 ```bash
@@ -29,7 +29,7 @@ If you copied the bundle to your own computer, use that path in the first line.
 
 ```bash
 git fetch origin
-git tag -a v0.1.0-rc1 RELEASE_SHA -m "Release candidate 1"
+git tag -a v0.1.0-rc1 c49130173c16171cb8c833ca6ede6b466a38e72a -m "Release candidate 1"
 git push origin v0.1.0-rc1
 ```
 
