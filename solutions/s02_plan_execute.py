@@ -11,10 +11,10 @@ from agentbook.patterns.plan_execute import PLAN, plan_and_execute
 
 def solution_1():
     """The check is your own code. Any rule you can write in Python works."""
-    def no_todo(step, output):
-        return "TODO" not in output
+    def no_fixme(step, output):
+        return "FIXME" not in output
 
-    outcome = plan_and_execute(FakeModel([PLAN, "TODO later"]), "Pack", no_todo)
+    outcome = plan_and_execute(FakeModel([PLAN, "FIXME later"]), "Pack", no_fixme)
     assert outcome.stop == "check_failed"
     return outcome.stop
 

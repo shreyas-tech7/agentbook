@@ -148,7 +148,7 @@
         "tokens": 156
       },
       "failure": {
-        "stop": "done",
+        "stop": "cut",
         "calls": 3,
         "tokens_in": 262,
         "tokens_out": 16,

@@ -85,6 +85,7 @@ In the failure case, the user pastes a log of 6,000 characters. That is about 1,
 
 <!-- quote: agentbook/patterns/memory.py#L84-L91 -->
 ```python
+
 def failure_example() -> tuple[Outcome, CallCounter]:
     """The user pastes a 6,000-character log. It is cut, and the pinned facts survive."""
     memory = Memory(max_tokens=200)
@@ -92,12 +93,11 @@ def failure_example() -> tuple[Outcome, CallCounter]:
     fake = FakeModel(["Hi!", "That log is long. I read the start.", "Still vegetarian: yes."])
     counter = CallCounter(fake)
     texts = ["Hello", "error line\n" * 545, "Am I still vegetarian?"]
-    return run_chat(counter, memory, texts), counter
 ```
 
 A naive memory has no pins and no cut. The test `test_failure_case_naive_memory_loses_the_system_prompt` shows what happens. The paste does not fit, so the window keeps nothing older than it. The window is empty. The model would forget that the user is vegetarian.
 
-Our memory has two guards. Pinned messages never drop. A single turn can use at most half the cap, so the paste is cut. After the paste, the window still holds the system prompt and stays under 200 tokens.
+Our memory has two guards. Pinned messages never drop. A single turn can use at most half the cap, so the paste is cut. After the paste, the window still holds the system prompt and stays under 200 tokens. The stop reason is `cut`. It warns your code that the model saw only part of one turn.
 
 ## When to use it
 

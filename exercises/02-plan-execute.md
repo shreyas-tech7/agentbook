@@ -4,7 +4,7 @@ Lesson: [Plan and execute](../docs/lessons/02-plan-execute.md). Solutions: `solu
 
 ## Exercise 1
 
-Write a check that fails when a step's output contains the word "TODO". Run a plan where step 1 returns "TODO later". Which stop reason do you get?
+Write a check that fails when a step's output contains the word "FIXME". Run a plan where step 1 returns "FIXME later". Which stop reason do you get?
 
 ## Exercise 2
 

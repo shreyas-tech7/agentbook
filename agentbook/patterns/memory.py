@@ -64,7 +64,8 @@ def chat_turn(model: Model, memory: Memory, text: str) -> str:
 def run_chat(model: Model, memory: Memory, texts: list[str]) -> Outcome:
     answers = [chat_turn(model, memory, text) for text in texts]
     window = memory.window()
-    return Outcome(answers[-1], "done", steps=len(texts),
+    stop = "cut" if memory.cut else "done"  # "cut" warns that the model saw only part of a turn
+    return Outcome(answers[-1], stop, steps=len(texts),
                    extra={"window_tokens": memory.size(window), "dropped": memory.dropped,
                           "cut": memory.cut,
                           "pinned_kept": all(p in window for p in memory.pinned)})

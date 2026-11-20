@@ -12,6 +12,7 @@ class NaiveMemory(p.Memory):
 
 def test_example_keeps_everything():
     outcome, counter = p.example()
+    assert outcome.stop == "done"
     assert outcome.extra["dropped"] == 0
     assert outcome.extra["pinned_kept"]
     assert counter.calls == 5
@@ -37,6 +38,7 @@ def test_failure_case_naive_memory_loses_the_system_prompt():
 
 def test_failure_case_guard_cuts_the_paste_and_keeps_pins():
     outcome, counter = p.failure_example()
+    assert outcome.stop == "cut"
     assert outcome.extra["cut"] == 1
     assert outcome.extra["pinned_kept"]
     assert outcome.extra["window_tokens"] <= 200

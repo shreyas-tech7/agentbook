@@ -15,13 +15,16 @@ def test_guard_blocks_a_real_connection():
 
 def test_guard_blocks_urllib_and_the_record_adapter():
     """Broken case: the record-mode adapter would call a real provider from a test."""
-    with pytest.raises(Exception) as info:
+    with pytest.raises(NetworkBlocked):
         urllib.request.urlopen("http://example.org", timeout=1)  # noqa: S310
-    assert "offline" in str(info.value) or isinstance(info.value.__cause__, NetworkBlocked) \
-        or "NetworkBlocked" in repr(info.value)
     model = OpenAICompatModel("http://example.org/v1", "any-model", tries=1)
-    with pytest.raises(Exception):
+    with pytest.raises(NetworkBlocked):
         model.complete([{"role": "user", "content": "hi"}])
+
+
+def test_adapter_refuses_other_url_schemes():
+    with pytest.raises(ValueError):
+        OpenAICompatModel("file:///etc/passwd", "m")
 
 
 def test_local_connections_still_work():

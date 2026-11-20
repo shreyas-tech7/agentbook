@@ -85,7 +85,8 @@ def to_wire(message: Message) -> dict[str, str]:
     """
     role, content = message["role"], message.get("content", "")
     if role == "tool":
-        return {"role": "user", "content": f"Tool result from {message.get('name', '?')}: {content}"}
+        name = message.get("name", "?")
+        return {"role": "user", "content": f"Tool result from {name}: {content}"}
     return {"role": role, "content": content}
 
 
@@ -96,7 +97,8 @@ def parse_reply(data: dict) -> Reply:
     if calls:
         fn = calls[0]["function"]
         args = fn.get("arguments") or "{}"
-        return Reply(tool_call=ToolCall(fn["name"], json.loads(args) if isinstance(args, str) else args))
+        parsed = json.loads(args) if isinstance(args, str) else args
+        return Reply(tool_call=ToolCall(fn["name"], parsed))
     return Reply(text=msg.get("content") or "")
 
 
@@ -108,6 +110,8 @@ class OpenAICompatModel:
 
     def __init__(self, base_url: str, model: str, key_env: str = "AGENTBOOK_API_KEY",
                  timeout: float = 60, tries: int = 5, sleep: Callable[[float], None] = time.sleep):
+        if not base_url.startswith(("https://", "http://")):
+            raise ValueError("base_url must start with https:// or http://")
         self.base_url, self.model, self.key_env = base_url.rstrip("/"), model, key_env
         self.timeout, self.tries, self.sleep = timeout, tries, sleep
 
@@ -119,8 +123,9 @@ class OpenAICompatModel:
         key = os.environ.get(self.key_env)
         if key:
             headers["Authorization"] = f"Bearer {key}"
-        req = urllib.request.Request(f"{self.base_url}/chat/completions",
-                                     data=json.dumps(body).encode(), headers=headers)
+        url = f"{self.base_url}/chat/completions"  # the scheme is checked in __init__
+        req = urllib.request.Request(url, data=json.dumps(body).encode(),  # noqa: S310
+                                     headers=headers)
         wait = 2.0
         for attempt in range(self.tries):
             try:
