@@ -1,0 +1,236 @@
+{
+  "source": "FakeModel scripted runs (no real model)",
+  "seed": "none (deterministic)",
+  "token_estimate": "characters / 4, rounded up",
+  "patterns": [
+    {
+      "number": 1,
+      "name": "tool_loop",
+      "title": "Tool loop",
+      "example": {
+        "stop": "done",
+        "calls": 2,
+        "tokens_in": 175,
+        "tokens_out": 10,
+        "tokens": 185
+      },
+      "failure": {
+        "stop": "max_steps",
+        "calls": 5,
+        "tokens_in": 505,
+        "tokens_out": 30,
+        "tokens": 535
+      }
+    },
+    {
+      "number": 2,
+      "name": "plan_execute",
+      "title": "Plan and execute",
+      "example": {
+        "stop": "done",
+        "calls": 4,
+        "tokens_in": 156,
+        "tokens_out": 37,
+        "tokens": 193
+      },
+      "failure": {
+        "stop": "check_failed",
+        "calls": 3,
+        "tokens_in": 106,
+        "tokens_out": 25,
+        "tokens": 131
+      }
+    },
+    {
+      "number": 3,
+      "name": "router",
+      "title": "Router",
+      "example": {
+        "stop": "done",
+        "calls": 2,
+        "tokens_in": 53,
+        "tokens_out": 15,
+        "tokens": 68
+      },
+      "failure": {
+        "stop": "fallback",
+        "calls": 1,
+        "tokens_in": 32,
+        "tokens_out": 15,
+        "tokens": 47
+      }
+    },
+    {
+      "number": 4,
+      "name": "prompt_chain",
+      "title": "Prompt chain with gates",
+      "example": {
+        "stop": "done",
+        "calls": 2,
+        "tokens_in": 81,
+        "tokens_out": 27,
+        "tokens": 108
+      },
+      "failure": {
+        "stop": "gate_failed",
+        "calls": 1,
+        "tokens_in": 48,
+        "tokens_out": 77,
+        "tokens": 125
+      }
+    },
+    {
+      "number": 5,
+      "name": "fan_out",
+      "title": "Fan-out and fan-in",
+      "example": {
+        "stop": "done",
+        "calls": 4,
+        "tokens_in": 124,
+        "tokens_out": 33,
+        "tokens": 157
+      },
+      "failure": {
+        "stop": "partial",
+        "calls": 3,
+        "tokens_in": 99,
+        "tokens_out": 31,
+        "tokens": 130
+      }
+    },
+    {
+      "number": 6,
+      "name": "orchestrator",
+      "title": "Orchestrator and workers",
+      "example": {
+        "stop": "done",
+        "calls": 4,
+        "tokens_in": 164,
+        "tokens_out": 48,
+        "tokens": 212
+      },
+      "failure": {
+        "stop": "too_many_workers",
+        "calls": 1,
+        "tokens_in": 38,
+        "tokens_out": 168,
+        "tokens": 206
+      }
+    },
+    {
+      "number": 7,
+      "name": "evaluator_optimizer",
+      "title": "Evaluator and optimizer",
+      "example": {
+        "stop": "accepted",
+        "calls": 4,
+        "tokens_in": 165,
+        "tokens_out": 36,
+        "tokens": 201
+      },
+      "failure": {
+        "stop": "max_rounds",
+        "calls": 6,
+        "tokens_in": 243,
+        "tokens_out": 37,
+        "tokens": 280
+      }
+    },
+    {
+      "number": 8,
+      "name": "memory",
+      "title": "Memory",
+      "example": {
+        "stop": "done",
+        "calls": 5,
+        "tokens_in": 137,
+        "tokens_out": 19,
+        "tokens": 156
+      },
+      "failure": {
+        "stop": "done",
+        "calls": 3,
+        "tokens_in": 262,
+        "tokens_out": 16,
+        "tokens": 278
+      }
+    },
+    {
+      "number": 9,
+      "name": "human_approval",
+      "title": "Human approval",
+      "example": {
+        "stop": "done",
+        "calls": 3,
+        "tokens_in": 336,
+        "tokens_out": 16,
+        "tokens": 352
+      },
+      "failure": {
+        "stop": "denied",
+        "calls": 2,
+        "tokens_in": 212,
+        "tokens_out": 11,
+        "tokens": 223
+      }
+    },
+    {
+      "number": 10,
+      "name": "handoff",
+      "title": "Handoff",
+      "example": {
+        "stop": "done",
+        "calls": 2,
+        "tokens_in": 171,
+        "tokens_out": 37,
+        "tokens": 208
+      },
+      "failure": {
+        "stop": "max_handoffs",
+        "calls": 4,
+        "tokens_in": 364,
+        "tokens_out": 60,
+        "tokens": 424
+      }
+    },
+    {
+      "number": 11,
+      "name": "budgets",
+      "title": "Budgets and stop rules",
+      "example": {
+        "stop": "done",
+        "calls": 2,
+        "tokens_in": 265,
+        "tokens_out": 10,
+        "tokens": 275
+      },
+      "failure": {
+        "stop": "max_tokens",
+        "calls": 5,
+        "tokens_in": 1630,
+        "tokens_out": 25,
+        "tokens": 1655
+      }
+    },
+    {
+      "number": 12,
+      "name": "retrieval",
+      "title": "Retrieval as a tool",
+      "example": {
+        "stop": "done",
+        "calls": 2,
+        "tokens_in": 183,
+        "tokens_out": 24,
+        "tokens": 207
+      },
+      "failure": {
+        "stop": "bad_citation",
+        "calls": 2,
+        "tokens_in": 181,
+        "tokens_out": 18,
+        "tokens": 199
+      }
+    }
+  ],
+  "generated_on": "2026-11-20"
+}
