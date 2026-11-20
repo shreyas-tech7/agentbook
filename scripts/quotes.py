@@ -14,7 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 MARKER = re.compile(r"<!-- quote: (?P<path>[\w/.]+)#(?P<ref>L\d+-L\d+|def:\w+) -->\n"
-                    r"```python\n(?P<body>.*?)```", re.S)
+                    r"```python\n(?P<body>(?:.*\n)*?)```(?=\n|$)")
 
 
 def lines_of(path: str, start: int, end: int, root: Path = ROOT) -> str | None:
