@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+      - "exercises/**"
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: astral-sh/setup-uv@v5
+      - name: Run init.sh (install, tests, README check, link check)
+        run: ./init.sh
+      - name: Lint
+        run: uvx ruff check . && uvx ruff check --select S agentbook scripts
+      - name: Lesson quotes
+        run: .venv/bin/python scripts/fill_quotes.py --check
+      - name: Call counts are current
+        run: .venv/bin/python scripts/run_examples.py --check

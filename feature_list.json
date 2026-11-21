@@ -1,0 +1,238 @@
+[
+  {
+    "id": "F01",
+    "area": "core",
+    "description": "Model interface, scripted FakeModel, OpenAI-compatible adapter, tools helper and call counter",
+    "steps": [
+      ".venv/bin/python -m pytest tests/test_core.py"
+    ],
+    "passes": true
+  },
+  {
+    "id": "F02",
+    "area": "safety",
+    "description": "conftest.py network guard fails any non-local connection, proven by a test",
+    "steps": [
+      ".venv/bin/python -m pytest tests/test_network_guard.py"
+    ],
+    "passes": true
+  },
+  {
+    "id": "F03",
+    "area": "rules",
+    "description": "Rule tests: every pattern file has at most 200 lines, imports use an allowlist (stdlib, agentbook, pytest in tests), every lesson quote matches real lines",
+    "steps": [
+      ".venv/bin/python -m pytest tests/test_repo_rules.py"
+    ],
+    "passes": true
+  },
+  {
+    "id": "F04",
+    "area": "pattern",
+    "description": "Pattern 1 Tool loop: code under 200 lines, FakeModel tests, a failure-case test with its guard, lesson docs/lessons/01-tool-loop.md, three exercises and separate solutions",
+    "steps": [
+      ".venv/bin/python -m pytest tests/test_p01_tool_loop.py",
+      ".venv/bin/python -m pytest tests/test_repo_rules.py tests/test_solutions.py -k tool_loop"
+    ],
+    "passes": true
+  },
+  {
+    "id": "F05",
+    "area": "pattern",
+    "description": "Pattern 2 Plan and execute: code under 200 lines, FakeModel tests, a failure-case test with its guard, lesson docs/lessons/02-plan-execute.md, three exercises and separate solutions",
+    "steps": [
+      ".venv/bin/python -m pytest tests/test_p02_plan_execute.py",
+      ".venv/bin/python -m pytest tests/test_repo_rules.py tests/test_solutions.py -k plan_execute"
+    ],
+    "passes": true
+  },
+  {
+    "id": "F06",
+    "area": "pattern",
+    "description": "Pattern 3 Router: code under 200 lines, FakeModel tests, a failure-case test with its guard, lesson docs/lessons/03-router.md, three exercises and separate solutions",
+    "steps": [
+      ".venv/bin/python -m pytest tests/test_p03_router.py",
+      ".venv/bin/python -m pytest tests/test_repo_rules.py tests/test_solutions.py -k router"
+    ],
+    "passes": true
+  },
+  {
+    "id": "F07",
+    "area": "pattern",
+    "description": "Pattern 4 Prompt chain with gates: code under 200 lines, FakeModel tests, a failure-case test with its guard, lesson docs/lessons/04-prompt-chain.md, three exercises and separate solutions",
+    "steps": [
+      ".venv/bin/python -m pytest tests/test_p04_prompt_chain.py",
+      ".venv/bin/python -m pytest tests/test_repo_rules.py tests/test_solutions.py -k prompt_chain"
+    ],
+    "passes": true
+  },
+  {
+    "id": "F08",
+    "area": "pattern",
+    "description": "Pattern 5 Fan-out and fan-in: code under 200 lines, FakeModel tests, a failure-case test with its guard, lesson docs/lessons/05-fan-out.md, three exercises and separate solutions",
+    "steps": [
+      ".venv/bin/python -m pytest tests/test_p05_fan_out.py",
+      ".venv/bin/python -m pytest tests/test_repo_rules.py tests/test_solutions.py -k fan_out"
+    ],
+    "passes": true
+  },
+  {
+    "id": "F09",
+    "area": "pattern",
+    "description": "Pattern 6 Orchestrator and workers: code under 200 lines, FakeModel tests, a failure-case test with its guard, lesson docs/lessons/06-orchestrator.md, three exercises and separate solutions",
+    "steps": [
+      ".venv/bin/python -m pytest tests/test_p06_orchestrator.py",
+      ".venv/bin/python -m pytest tests/test_repo_rules.py tests/test_solutions.py -k orchestrator"
+    ],
+    "passes": true
+  },
+  {
+    "id": "F10",
+    "area": "pattern",
+    "description": "Pattern 7 Evaluator and optimizer: code under 200 lines, FakeModel tests, a failure-case test with its guard, lesson docs/lessons/07-evaluator-optimizer.md, three exercises and separate solutions",
+    "steps": [
+      ".venv/bin/python -m pytest tests/test_p07_evaluator_optimizer.py",
+      ".venv/bin/python -m pytest tests/test_repo_rules.py tests/test_solutions.py -k evaluator_optimizer"
+    ],
+    "passes": true
+  },
+  {
+    "id": "F11",
+    "area": "pattern",
+    "description": "Pattern 8 Memory: code under 200 lines, FakeModel tests, a failure-case test with its guard, lesson docs/lessons/08-memory.md, three exercises and separate solutions",
+    "steps": [
+      ".venv/bin/python -m pytest tests/test_p08_memory.py",
+      ".venv/bin/python -m pytest tests/test_repo_rules.py tests/test_solutions.py -k memory"
+    ],
+    "passes": true
+  },
+  {
+    "id": "F12",
+    "area": "pattern",
+    "description": "Pattern 9 Human approval: code under 200 lines, FakeModel tests, a failure-case test with its guard, lesson docs/lessons/09-human-approval.md, three exercises and separate solutions",
+    "steps": [
+      ".venv/bin/python -m pytest tests/test_p09_human_approval.py",
+      ".venv/bin/python -m pytest tests/test_repo_rules.py tests/test_solutions.py -k human_approval"
+    ],
+    "passes": true
+  },
+  {
+    "id": "F13",
+    "area": "pattern",
+    "description": "Pattern 10 Handoff: code under 200 lines, FakeModel tests, a failure-case test with its guard, lesson docs/lessons/10-handoff.md, three exercises and separate solutions",
+    "steps": [
+      ".venv/bin/python -m pytest tests/test_p10_handoff.py",
+      ".venv/bin/python -m pytest tests/test_repo_rules.py tests/test_solutions.py -k handoff"
+    ],
+    "passes": true
+  },
+  {
+    "id": "F14",
+    "area": "pattern",
+    "description": "Pattern 11 Budgets and stop rules: code under 200 lines, FakeModel tests, a failure-case test with its guard, lesson docs/lessons/11-budgets.md, three exercises and separate solutions",
+    "steps": [
+      ".venv/bin/python -m pytest tests/test_p11_budgets.py",
+      ".venv/bin/python -m pytest tests/test_repo_rules.py tests/test_solutions.py -k budgets"
+    ],
+    "passes": true
+  },
+  {
+    "id": "F15",
+    "area": "pattern",
+    "description": "Pattern 12 Retrieval as a tool: code under 200 lines, FakeModel tests, a failure-case test with its guard, lesson docs/lessons/12-retrieval.md, three exercises and separate solutions",
+    "steps": [
+      ".venv/bin/python -m pytest tests/test_p12_retrieval.py",
+      ".venv/bin/python -m pytest tests/test_repo_rules.py tests/test_solutions.py -k retrieval"
+    ],
+    "passes": true
+  },
+  {
+    "id": "F16",
+    "area": "counter",
+    "description": "Call counts for every example and failure case are written to results/call_counts.json by a script, and the README pattern map (all twelve patterns, when to use, when not, typical calls) is generated from it",
+    "steps": [
+      ".venv/bin/python scripts/run_examples.py --check",
+      ".venv/bin/python scripts/gen_readme.py --check",
+      ".venv/bin/python -m pytest tests/test_readme.py"
+    ],
+    "passes": true
+  },
+  {
+    "id": "F17",
+    "area": "record",
+    "description": "Optional record-mode demo of tool loop, router and evaluator-optimizer on a free provider. If it cannot run, the README says so",
+    "steps": [
+      ".venv/bin/python scripts/record_demo.py --status",
+      ".venv/bin/python -m pytest tests/test_readme.py -k record"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F18",
+    "area": "init",
+    "description": "./init.sh runs every test offline in under 60 seconds and all pass",
+    "steps": [
+      "time ./init.sh"
+    ],
+    "passes": true
+  },
+  {
+    "id": "F19",
+    "area": "quality",
+    "description": "README has the ten parts in order, a CI badge, and numbers that match results files",
+    "steps": [
+      ".venv/bin/python -m pytest tests/test_readme.py"
+    ],
+    "passes": true
+  },
+  {
+    "id": "F20",
+    "area": "quality",
+    "description": "LICENSE, CHANGELOG, CONTRIBUTING, issue templates, CI workflow checked by actionlint, topics list, scripted 1280x640 social preview, static results page and a real terminal transcript in docs/DEMO.md",
+    "steps": [
+      ".venv/bin/python -m pytest tests/test_repo_quality.py",
+      "actionlint .github/workflows/*.yml"
+    ],
+    "passes": true
+  },
+  {
+    "id": "F21",
+    "area": "quality",
+    "description": "scripts/check_links.py checks relative links, anchors and placeholders in Markdown and HTML",
+    "steps": [
+      ".venv/bin/python scripts/check_links.py",
+      ".venv/bin/python -m pytest tests/test_check_links.py"
+    ],
+    "passes": true
+  },
+  {
+    "id": "F22",
+    "area": "study",
+    "description": "Study-later kit: docs/WALKTHROUGH.md, docs/INTERVIEW_QA.md with about 15 grounded answers, DECISIONS.md",
+    "steps": [
+      ".venv/bin/python -m pytest tests/test_repo_quality.py -k study"
+    ],
+    "passes": true
+  },
+  {
+    "id": "F23",
+    "area": "release",
+    "description": "Release check done: review of the diff, gitleaks on history, pip-audit, ruff S, actionlint, link check, humanizer pass, outside check by a fresh agent, clean git status",
+    "steps": [
+      "cat docs/RELEASE_CHECK.md",
+      "gitleaks git -v .",
+      "git status --porcelain"
+    ],
+    "passes": true
+  },
+  {
+    "id": "F24",
+    "area": "handoff",
+    "description": "CHANGELOG v0.1.0-rc1 entry with the release SHA, docs/HUMAN_STEPS.md, docs/handoff/COWORK_PROMPT.md, branch pushed",
+    "steps": [
+      ".venv/bin/python -m pytest tests/test_repo_quality.py -k handoff",
+      "git ls-remote origin claude/build-agentbook"
+    ],
+    "passes": true
+  }
+]

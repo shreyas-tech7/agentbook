@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>agentbook results</title>
+<style>
+:root { --bg: #fbfaf7; --fg: #1f2328; --muted: #59636e; --line: #d8dee4; --accent: #0b6e4f; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #16181c; --fg: #e6e6e6; --muted: #a0a7b0; --line: #30363d; --accent: #4cc9a0; }
+}
+body { background: var(--bg); color: var(--fg); font: 16px/1.5 system-ui, sans-serif;
+       margin: 0 auto; max-width: 960px; padding: 24px 16px; }
+h1 { margin-bottom: 4px; } p { color: var(--muted); }
+a { color: var(--accent); }
+.wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 640px; }
+th, td { border-bottom: 1px solid var(--line); padding: 8px; text-align: left; }
+th { font-weight: 600; }
+</style>
+</head>
+<body>
+<h1>agentbook</h1>
+<p>Twelve agent patterns as small, tested Python files. Numbers below come from
+results/call_counts.json, recorded on 2026-11-20. Record mode did not run. All numbers come from the scripted FakeModel.</p>
+<div class="wrap">
+<table>
+<thead><tr><th>#</th><th>Pattern</th><th>Use it when</th><th>Calls</th><th>Est. tokens</th>
+<th>Failure stop</th><th>Failure calls</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><a href="lessons/01-tool-loop.md">Tool loop</a></td><td>The steps depend on what the tools return</td><td>2</td><td>185</td><td><code>max_steps</code></td><td>5</td></tr>
+<tr><td>2</td><td><a href="lessons/02-plan-execute.md">Plan and execute</a></td><td>You want to see and check a plan before you pay for it</td><td>4</td><td>193</td><td><code>check_failed</code></td><td>3</td></tr>
+<tr><td>3</td><td><a href="lessons/03-router.md">Router</a></td><td>Requests fall into a few clear groups</td><td>2</td><td>68</td><td><code>fallback</code></td><td>1</td></tr>
+<tr><td>4</td><td><a href="lessons/04-prompt-chain.md">Prompt chain with gates</a></td><td>The steps are fixed and each output can be checked in code</td><td>2</td><td>108</td><td><code>gate_failed</code></td><td>1</td></tr>
+<tr><td>5</td><td><a href="lessons/05-fan-out.md">Fan-out and fan-in</a></td><td>Independent parts are known before the run</td><td>4</td><td>157</td><td><code>partial</code></td><td>3</td></tr>
+<tr><td>6</td><td><a href="lessons/06-orchestrator.md">Orchestrator and workers</a></td><td>The parts depend on the task and cannot be listed in advance</td><td>4</td><td>212</td><td><code>too_many_workers</code></td><td>1</td></tr>
+<tr><td>7</td><td><a href="lessons/07-evaluator-optimizer.md">Evaluator and optimizer</a></td><td>Quality matters and a critic can name real problems</td><td>4</td><td>201</td><td><code>max_rounds</code></td><td>6</td></tr>
+<tr><td>8</td><td><a href="lessons/08-memory.md">Memory</a></td><td>A chat runs for many turns</td><td>5</td><td>156</td><td><code>cut</code></td><td>3</td></tr>
+<tr><td>9</td><td><a href="lessons/09-human-approval.md">Human approval</a></td><td>A tool deletes, sends or pays</td><td>3</td><td>352</td><td><code>denied</code></td><td>2</td></tr>
+<tr><td>10</td><td><a href="lessons/10-handoff.md">Handoff</a></td><td>The right agent becomes clear mid-conversation</td><td>2</td><td>208</td><td><code>max_handoffs</code></td><td>4</td></tr>
+<tr><td>11</td><td><a href="lessons/11-budgets.md">Budgets and stop rules</a></td><td>Always, in any loop where the model decides when to stop</td><td>2</td><td>275</td><td><code>max_tokens</code></td><td>5</td></tr>
+<tr><td>12</td><td><a href="lessons/12-retrieval.md">Retrieval as a tool</a></td><td>Answers depend on documents the model has not seen</td><td>2</td><td>207</td><td><code>bad_citation</code></td><td>2</td></tr>
+</tbody>
+</table>
+</div>
+<p>Call counts come from scripted runs, so they are fixed numbers with no sampling error.
+Tokens are estimates: characters divided by 4.</p>
+</body>
+</html>
