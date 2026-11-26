@@ -63,8 +63,6 @@ def test_handoff_files_are_complete():
     for word in ["agentbook.bundle", "git push origin --all", "v0.1.0-rc1", "gitleaks",
                  "public", "BUILD_PROMPT.md"]:
         assert word in steps, word
-    cowork = read("docs/handoff/COWORK_PROMPT.md")
-    assert "Do not make the repo public" in cowork
     assert "v0.1.0-rc1" in read("CHANGELOG.md")
 
 

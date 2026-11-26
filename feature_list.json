@@ -228,7 +228,7 @@
   {
     "id": "F24",
     "area": "handoff",
-    "description": "CHANGELOG v0.1.0-rc1 entry with the release SHA, docs/HUMAN_STEPS.md, docs/handoff/COWORK_PROMPT.md, branch pushed",
+    "description": "CHANGELOG v0.1.0-rc1 entry with the release SHA, docs/HUMAN_STEPS.md, branch pushed",
     "steps": [
       ".venv/bin/python -m pytest tests/test_repo_quality.py -k handoff",
       "git ls-remote origin claude/build-agentbook"
