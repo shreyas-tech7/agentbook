@@ -2,7 +2,7 @@
 
 ## B1. No GitHub repo or token
 - Error: the session's GitHub token does not work and no repo is attached. API calls answer "GitHub access to this repository is not enabled for this session".
-- Instead: pushed to a local bare remote and wrote a bundle. CI steps ran locally. Late in the run the coordinator reported that the private repo now exists. One push to it was tried at the end (see the final report).
+- Instead: pushed to a local bare remote and wrote a bundle. CI steps ran locally. Late in the run the coordinator reported that the GitHub repo now exists. One push to it was tried at the end (see the final report).
 - Manual step: docs/HUMAN_STEPS.md step 1.
 
 ## B2. No free model provider
